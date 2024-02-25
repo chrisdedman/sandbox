@@ -28,5 +28,15 @@ _exit:
  * as -target armv7m  startup.s -o startup.o
  * /opt/homebrew/Cellar/llvm/17.0.6_1/bin/ld.lld -T test.ld startup.o -o test.elf  
  * /opt/homebrew/Cellar/llvm/17.0.6_1/bin/llvm-objcopy -O binary test.elf test.bin
- * qemu-system-arm -M versatilepb -m 128M -nographic -s -S -kernel test.bin
+ * qemu-system-arm -M netduinoplus2 -m 128M -nographic -s -S -kernel test.bin
+
+ * Option explained:
+        -s  shorthand for -gdb tcp::1234
+        -S  freeze CPU at startup (use 'c' to start execution)
+        -m  [size=]megs[,slots=n,maxmem=size]
+                configure guest RAM
+                size: initial amount of guest memory
+                slots: number of hotplug slots (default: none)
+                maxmem: maximum amount of guest memory (default: none)
+                Note: Some architectures might enforce a specific granularity
  */
