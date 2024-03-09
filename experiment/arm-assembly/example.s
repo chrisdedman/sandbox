@@ -44,6 +44,6 @@ Led:
 
 // as -target armv7m -o example.o example.s
 // /opt/homebrew/Cellar/llvm/17.0.6_1/bin/ld.lld -T example.ld -o example.elf example.o
-// objcopy -O binary example.o example.bin
+// /opt/homebrew/Cellar/llvm/17.0.6_1/bin/llvm-objcopy -O binary example.o example.bin
 // qemu-system-arm -M vexpress-a9 -serial stdio -device loader,file=u-boot.bin,addr=0x60800000,cpu-num=0,force-raw=on
 // qemu-system-arm -M netduinoplus2 -cpu cortex-m4 -nographic -serial mon:stdio -device loader,file=example.bin,addr=0x00000000,force-raw=on
