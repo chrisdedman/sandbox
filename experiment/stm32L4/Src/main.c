@@ -15,7 +15,7 @@ int main(void)
 {
     initialise_monitor_handles(); // Enable semihosting for printf() if required
 
-    // Define pointers to memory-mapped registers
+    // Define pointers to memory-mapped registers for GPIOB and GPIOA on the B-L475E-IOT01A board (STM32L475)
     uint32_t *pClockRegister     = (uint32_t*) 0x4002104C;  // RCC AHB2ENR
     uint32_t *pPortBModeRegister = (uint32_t*) 0x48000400;  // GPIOB MODER
     uint32_t *pPortBDataRegister = (uint32_t*) 0x48000414;  // GPIOB ODR
