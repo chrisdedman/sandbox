@@ -8,40 +8,38 @@
 
 #include <stdint.h>
 #include <stdio.h>
+#include "main.h"
 
-extern void initialise_monitor_handles();
+// extern void initialise_monitor_handles(); // Semihosting (uncomment if required)
 
 int main(void)
 {
-    initialise_monitor_handles(); // Enable semihosting for printf() if required
+    // initialise_monitor_handles(); // Enable semihosting for printf debugging (uncomment if required)
 
-    // Define pointers to memory-mapped registers for GPIOB and GPIOA on the B-L475E-IOT01A board (STM32L475)
-    uint32_t *pClockRegister     = (uint32_t*) 0x4002104C;  // RCC AHB2ENR
-    uint32_t *pPortBModeRegister = (uint32_t*) 0x48000400;  // GPIOB MODER
-    uint32_t *pPortBDataRegister = (uint32_t*) 0x48000414;  // GPIOB ODR
+    RCC_AHB2ENR_t volatile *const pClockRegister     = (RCC_AHB2ENR_t*) 0x4002104C;
+    GPIOx_MODER_t volatile *const pPortBModeRegister = (GPIOx_MODER_t*) 0x48000400;
+    GPIOx_MODER_t volatile *const pPortAModeRegister = (GPIOx_MODER_t*) 0x48000000;
+    GPIOx_ODR_t volatile *const pPortBDataRegister   = (GPIOx_ODR_t*) 0x48000414;
+    GPIOx_ODR_t volatile *const pPortADataRegister   = (GPIOx_ODR_t*) 0x48000014;
 
-    uint32_t *pPortAModeRegister = (uint32_t*) 0x48000000;  // GPIOA MODER
-    uint32_t *pPortADataRegister = (uint32_t*) 0x48000014;  // GPIOA ODR
+    pPortAModeRegister->pin_5 = 1;
+    pPortBModeRegister->pin_14 = 1;
 
-    // 1. Enable the clock for GPIOB peripheral in the AHB2ENR (SET the 1st bit position)
-    *pClockRegister |= (1 << 1);
+    pClockRegister->GPIOA_EN = 1;
+    pClockRegister->GPIOB_EN = 1;
 
-    // 2. Configure the mode of the IO pin as output (PB14)
-    // a. Clear the 28th and 29th bit positions (CLEAR)
-    *pPortBModeRegister &= ~(3 << 28); // PB14 is at bit positions 28 and 29
-    // b. Set the 28th bit position as 1 (SET)
-    *pPortBModeRegister |= (1 << 28);
+    while(1)
+    {
+        pPortADataRegister->pin_5 = 1;
+        pPortBDataRegister->pin_14 = 1;
 
-    // 3. Set the 14th bit of the output data register to make I/O pin-12 HIGH
-	*pPortBDataRegister |= (1 << 14);
+        for (volatile uint32_t i = 0; i < 300000; i++);
 
-    // Repeat the above steps for GPIOA pin 5 (PA5)
-	*pClockRegister |= (1 << 0);
-	*pPortAModeRegister &= ~(3 << 10);
-	*pPortAModeRegister |= (1 << 10);
-	*pPortADataRegister |= (1 << 5);
+        pPortADataRegister->pin_5 = 0;
+        pPortBDataRegister->pin_14 = 0;
 
-	while(1);
+        for (volatile uint32_t i = 0; i < 300000; i++);
+    }
 
     return 0;
 }
