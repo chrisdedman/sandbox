@@ -12,6 +12,8 @@
 
 // extern void initialise_monitor_handles(); // Semihosting (uncomment if required)
 
+void delay();
+
 int main(void)
 {
     // initialise_monitor_handles(); // Enable semihosting for printf debugging (uncomment if required)
@@ -22,7 +24,7 @@ int main(void)
     GPIOx_ODR_t volatile *const pPortBDataRegister   = (GPIOx_ODR_t*) 0x48000414;
     GPIOx_ODR_t volatile *const pPortADataRegister   = (GPIOx_ODR_t*) 0x48000014;
 
-    pPortAModeRegister->pin_5 = 1;
+    pPortAModeRegister->pin_5  = 1;
     pPortBModeRegister->pin_14 = 1;
 
     pClockRegister->GPIOA_EN = 1;
@@ -30,16 +32,21 @@ int main(void)
 
     while(1)
     {
-        pPortADataRegister->pin_5 = 1;
+        pPortADataRegister->pin_5  = 1;
         pPortBDataRegister->pin_14 = 1;
 
-        for (volatile uint32_t i = 0; i < 30000000; i++);
+        delay();
 
-        pPortADataRegister->pin_5 = 0;
+        pPortADataRegister->pin_5  = 0;
         pPortBDataRegister->pin_14 = 0;
 
-        for (volatile uint32_t i = 0; i < 30000000; i++);
+        delay();
     }
 
     return 0;
+}
+
+void delay()
+{
+    for (volatile uint32_t i = 0; i < 30000000; i++);
 }
