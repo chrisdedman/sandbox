@@ -33,12 +33,12 @@ int main(void)
         pPortADataRegister->pin_5 = 1;
         pPortBDataRegister->pin_14 = 1;
 
-        for (volatile uint32_t i = 0; i < 300000; i++);
+        for (volatile uint32_t i = 0; i < 30000000; i++);
 
         pPortADataRegister->pin_5 = 0;
         pPortBDataRegister->pin_14 = 0;
 
-        for (volatile uint32_t i = 0; i < 300000; i++);
+        for (volatile uint32_t i = 0; i < 30000000; i++);
     }
 
     return 0;
